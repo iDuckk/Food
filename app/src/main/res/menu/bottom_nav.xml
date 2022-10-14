@@ -6,12 +6,12 @@
         android:title="@string/navBot_menu"/>
 
     <item
-        android:id="@+id/profile"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/ic_profile"
         android:title="@string/navBot_profile"/>
 
     <item
-        android:id="@+id/basket"
+        android:id="@+id/basketFragment"
         android:icon="@drawable/ic_basket"
         android:title="@string/navBot_basket"/>
 </menu>
