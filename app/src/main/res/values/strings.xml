@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Food</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="navBot_menu">Меню</string>
+    <string name="navBot_profile">Профиль</string>
+    <string name="navBot_basket">Корзина</string>
+
+    <string-array name="Cities">
+        <item>Москва</item>
+        <item>Новосибирск</item>
+        <item>Нижний Новгород</item>
+        <item>Омск</item>
+        <item>Томск</item>
+        <item>Уфа</item>
+    </string-array>
+
 </resources>
