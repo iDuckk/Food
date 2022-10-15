@@ -8,10 +8,15 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.food.R
 import com.example.food.data.retrofit.ApiFactory
 import com.example.food.data.retrofit.FoodService
-import com.example.food.databinding.ActivityMainBinding
-import com.example.food.presentation.model.Category
-import com.example.food.presentation.model.FoodItem
+import com.example.food.data.retrofit.repository.FoodRepositoryImpl
+import com.example.food.domain.model.FoodItem
+import com.example.food.domain.repository.FoodRepository
+import com.example.food.domain.useCases.GetCategory
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 
@@ -23,22 +28,11 @@ class MainActivity : AppCompatActivity() {
 
         initNavBottom()
 
-        val foodService : FoodService = ApiFactory.getInstance().create(FoodService::class.java)
-        foodService.get().enqueue(object : retrofit2.Callback<List<FoodItem>?> {
-            override fun onResponse(call: Call<List<FoodItem>?>, response: Response<List<FoodItem>?>) {
-                val responseBody = response.body()!!
-                var category = ArrayList<String>()
+        val repo = FoodRepositoryImpl()
+        CoroutineScope(IO).launch {
+            GetCategory(repo).invoke("burgers")
+        }
 
-                //Create List of genres
-                for (Data in responseBody) {     //In each
-                    Log.d("TAG", "<work" +Data.name)
-                }
-            }
-
-            override fun onFailure(call: Call<List<FoodItem>?>, t: Throwable) {
-                Log.d("TAG", "ERROR ****" + t.message!!)
-            }
-        })
     }
 
 

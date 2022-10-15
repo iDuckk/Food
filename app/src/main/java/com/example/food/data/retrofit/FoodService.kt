@@ -1,13 +1,13 @@
 package com.example.food.data.retrofit
 
-import com.example.food.presentation.model.Category
-import com.example.food.presentation.model.FoodItem
+import com.example.food.domain.model.FoodItem
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface FoodService {
 
-    @GET("pizzas")
-    fun get(): Call<List<FoodItem>>
+    @GET("{category}")
+    fun get(@Path("category") category: String): Call<List<FoodItem>>
 
 }

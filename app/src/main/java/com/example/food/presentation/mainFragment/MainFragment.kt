@@ -1,7 +1,6 @@
 package com.example.food.presentation.mainFragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,22 +9,19 @@ import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.food.R
 import com.example.food.databinding.FragmentMainBinding
-import com.example.food.presentation.adapters.CategoriesAdapter
-import com.example.food.presentation.adapters.onClickListenerItem
-import com.example.food.presentation.adapters.prevItem
-import com.example.food.presentation.adapters.selectedItem
-import com.example.food.presentation.model.CategoriesItem
+import com.example.food.presentation.adapters.categoryAdapter.CategoriesAdapter
+import com.example.food.presentation.adapters.categoryAdapter.onClickListenerItem
+import com.example.food.domain.model.CategoriesItem
 
 class mainFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding: FragmentMainBinding get() = _binding!!
 
-    val categoriesAdapter: CategoriesAdapter =CategoriesAdapter()
+    val categoriesAdapter: CategoriesAdapter = CategoriesAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +56,7 @@ class mainFragment : Fragment() {
 
         onClickListenerItem = {
             categoriesAdapter.notifyDataSetChanged()
+
         }
 
     }
@@ -68,6 +65,7 @@ class mainFragment : Fragment() {
         var id = 0
         val list :ArrayList<CategoriesItem> = ArrayList<CategoriesItem>()
         val categories = resources.getStringArray(R.array.Categories)
+
         categories.forEach {
             list.add(CategoriesItem(id++, it))
         }
