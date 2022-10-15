@@ -10,5 +10,6 @@
 
     <color name="background_botNav">#F0F0F0</color>
     <color name="background_botNav_clicked">#FD3A69</color>
+    <color name="button_category_clicked">#34FD3A69</color>
     <color name="background_botNav_unclicked">#7B7B7B</color>
 </resources>
