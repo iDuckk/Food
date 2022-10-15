@@ -1,4 +1,4 @@
-package com.example.food.presentation.adapters
+package com.example.food.presentation.adapters.categoryAdapter
 
 import android.os.Build
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ListAdapter
 import com.example.food.R
 import com.example.food.databinding.ItemCategoryBinding
-import com.example.food.presentation.model.CategoriesItem
+import com.example.food.domain.model.CategoriesItem
 
 var onClickListenerItem: ((item : CategoriesItem) -> Unit)? = null
 var selectedItem: Int? = null

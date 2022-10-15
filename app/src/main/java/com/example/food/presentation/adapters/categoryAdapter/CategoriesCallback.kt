@@ -1,7 +1,7 @@
-package com.example.food.presentation.adapters
+package com.example.food.presentation.adapters.categoryAdapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.food.presentation.model.CategoriesItem
+import com.example.food.domain.model.CategoriesItem
 
 class CategoriesCallback: DiffUtil.ItemCallback<CategoriesItem>() {
     override fun areItemsTheSame(oldItem: CategoriesItem, newItem: CategoriesItem): Boolean {

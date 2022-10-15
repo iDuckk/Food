@@ -1,4 +1,4 @@
-package com.example.food.presentation.adapters
+package com.example.food.presentation.adapters.categoryAdapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.food.databinding.ItemCategoryBinding
