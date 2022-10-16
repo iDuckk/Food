@@ -1,6 +1,7 @@
 package com.example.food.domain.model
 
 data class FoodItem(
+    val id_db: Int,
     val id: String,
     val img: String,
     val name: String,
