@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.food.R
 import com.example.food.databinding.ItemCategoryBinding
 import com.example.food.domain.model.CategoriesItem
+import javax.inject.Inject
 
 var onClickListenerItem: ((item: CategoriesItem) -> Unit)? = null
 var selectedItem: Int? = null
 var prevItem: TextView? = null
 
-class CategoriesAdapter() :
+class CategoriesAdapter @Inject constructor() :
     ListAdapter<CategoriesItem, CategoriesViewHolder>(CategoriesCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesViewHolder {
         return CategoriesViewHolder(
@@ -55,7 +56,7 @@ class CategoriesAdapter() :
             //Set color state TextView
             it.isEnabled = false
             it.setBackgroundResource(R.drawable.border_button_category_clicked)
-            selectedItem = position
+            selectedItem = item.id
         }
     }
 }

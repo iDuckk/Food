@@ -1,5 +1,6 @@
 package com.example.food.presentation.mainFragment
 
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,6 +18,8 @@ import com.example.food.databinding.FragmentMainBinding
 import com.example.food.presentation.adapters.categoryAdapter.CategoriesAdapter
 import com.example.food.presentation.adapters.categoryAdapter.onClickListenerItem
 import com.example.food.domain.model.CategoriesItem
+import com.example.food.presentation.adapters.categoryAdapter.selectedItem
+import com.example.food.presentation.adapters.foodAdapter.FoodAdapter
 import javax.inject.Inject
 
 class MainFragment : Fragment() {
@@ -24,10 +27,15 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding: FragmentMainBinding get() = _binding!!
 
+
     @Inject
     lateinit var viewModel: MainFragmentViewModel
+    @Inject
+    lateinit var categoriesAdapter: CategoriesAdapter
+    @Inject
+    lateinit var foodAdapter: FoodAdapter
 
-    val categoriesAdapter: CategoriesAdapter = CategoriesAdapter()
+    var listCategory :ArrayList<CategoriesItem> = ArrayList<CategoriesItem>()
 
     private val component by lazy {
         (requireActivity().application as FoodApplication).component
@@ -49,24 +57,40 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        listCategory = createList()
+
         initSpinner()
 
         initSalesImages()
 
         initRecViewCategories()
 
-//        viewModel.getCategory("burgers")
+        initRecViewFood()
 
         viewModel.getLiveDate().observe(viewLifecycleOwner){
-            it.forEach { item ->
-                //Log.d("TAG", item.name)
-            }
+            foodAdapter.submitList(it.toMutableList())
         }
 
     }
 
+    companion object {
+        private const val CATEGORY_TYPE = "categoryType"
+        private const val DEFAULT_CATEGORY_TYPE = 0
+
+    }
+
+    private fun initRecViewFood() {
+        with(binding.recFood){
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            adapter = foodAdapter
+        }
+    }
+
     private fun initRecViewCategories() {
-        categoriesAdapter.submitList(createList())
+        //Set category View
+        selectedItem = setCategory()
+        //Set List
+        categoriesAdapter.submitList(listCategory)
         //Set recView Horizontal
         with(binding.recViewCategories){
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -74,19 +98,23 @@ class MainFragment : Fragment() {
         }
         //ClickListener
         onClickListenerItem = {
-
+            viewModel.getCategory(it.category)
+            //Save category View
+            if(selectedItem != null)
+                setSharePref(it.id)
         }
 
     }
 
     private fun createList() :ArrayList<CategoriesItem>{
         var id = 0
-        val list :ArrayList<CategoriesItem> = ArrayList<CategoriesItem>()
+        var list :ArrayList<CategoriesItem> = ArrayList<CategoriesItem>()
         //Get from resource String
         val categories = resources.getStringArray(R.array.Categories)
 
         categories.forEach {
-            list.add(CategoriesItem(id++, it))
+            list.add(CategoriesItem(id, it))
+            id++
         }
         return list
     }
@@ -115,7 +143,22 @@ class MainFragment : Fragment() {
         binding.spinnerCity.adapter = adapter
     }
 
-    companion object {
+    private fun setCategory(): Int {
+        //Get statement of Currency in Share preference
+        val sharedPref = requireActivity().getPreferences(MODE_PRIVATE)
+        val categoryPos = sharedPref.getInt(CATEGORY_TYPE, DEFAULT_CATEGORY_TYPE)
+        Log.d("TAG", categoryPos.toString())
+        return categoryPos
+    }
+
+    private fun setSharePref(category: Int) {
+        //Save statement of Currency in Share preference
+        val sharedPref = requireActivity().getPreferences(MODE_PRIVATE) ?: return
+        Log.d("TAG", category.toString())
+        with(sharedPref.edit()) {
+            putInt(CATEGORY_TYPE, category)
+            apply()
+        }
     }
 
     override fun onDestroyView() {
