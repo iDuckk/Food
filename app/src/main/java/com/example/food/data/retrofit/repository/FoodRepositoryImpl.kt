@@ -7,8 +7,9 @@ import com.example.food.domain.model.FoodItem
 import com.example.food.domain.repository.FoodRepository
 import retrofit2.Call
 import retrofit2.Response
+import javax.inject.Inject
 
-class FoodRepositoryImpl() :FoodRepository {
+class FoodRepositoryImpl @Inject constructor() :FoodRepository {
 
     override suspend fun getItem(name: String): ArrayList<FoodItem> {
         var category = ArrayList<FoodItem>()
