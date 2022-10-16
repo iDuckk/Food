@@ -6,6 +6,7 @@
     <string name="navBot_menu">Меню</string>
     <string name="navBot_profile">Профиль</string>
     <string name="navBot_basket">Корзина</string>
+    <string name="price">от %1$s р</string>
 
     <string-array name="Cities">
         <item>Москва</item>

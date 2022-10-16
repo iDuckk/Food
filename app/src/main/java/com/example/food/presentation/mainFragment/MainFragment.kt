@@ -2,7 +2,6 @@ package com.example.food.presentation.mainFragment
 
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +19,7 @@ import com.example.food.presentation.adapters.categoryAdapter.onClickListenerIte
 import com.example.food.domain.model.CategoriesItem
 import com.example.food.presentation.adapters.categoryAdapter.selectedItem
 import com.example.food.presentation.adapters.foodAdapter.FoodAdapter
+import com.example.food.utils.isOnline
 import javax.inject.Inject
 
 class MainFragment : Fragment() {
@@ -34,6 +34,8 @@ class MainFragment : Fragment() {
     lateinit var categoriesAdapter: CategoriesAdapter
     @Inject
     lateinit var foodAdapter: FoodAdapter
+    @Inject
+    lateinit var isOnline: isOnline
 
     var listCategory :ArrayList<CategoriesItem> = ArrayList<CategoriesItem>()
 
@@ -67,16 +69,26 @@ class MainFragment : Fragment() {
 
         initRecViewFood()
 
-        viewModel.getLiveDate().observe(viewLifecycleOwner){
-            foodAdapter.submitList(it.toMutableList())
-        }
+        setList()
 
     }
 
     companion object {
         private const val CATEGORY_TYPE = "categoryType"
         private const val DEFAULT_CATEGORY_TYPE = 0
+        private const val firstCategory = "bbqs"
 
+    }
+
+    private fun setList(){
+        //If online set first category
+        if(isOnline()) {
+            viewModel.getCategory(firstCategory)
+            setSharePref(DEFAULT_CATEGORY_TYPE)
+        }
+        viewModel.getLiveDate().observe(viewLifecycleOwner){
+            foodAdapter.submitList(it.toMutableList())
+        }
     }
 
     private fun initRecViewFood() {
@@ -96,6 +108,8 @@ class MainFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = categoriesAdapter
         }
+        //Scroll to selected Position
+        binding.recViewCategories.layoutManager?.scrollToPosition(selectedItem!!)
         //ClickListener
         onClickListenerItem = {
             viewModel.getCategory(it.category)
@@ -147,14 +161,12 @@ class MainFragment : Fragment() {
         //Get statement of Currency in Share preference
         val sharedPref = requireActivity().getPreferences(MODE_PRIVATE)
         val categoryPos = sharedPref.getInt(CATEGORY_TYPE, DEFAULT_CATEGORY_TYPE)
-        Log.d("TAG", categoryPos.toString())
         return categoryPos
     }
 
     private fun setSharePref(category: Int) {
         //Save statement of Currency in Share preference
         val sharedPref = requireActivity().getPreferences(MODE_PRIVATE) ?: return
-        Log.d("TAG", category.toString())
         with(sharedPref.edit()) {
             putInt(CATEGORY_TYPE, category)
             apply()
