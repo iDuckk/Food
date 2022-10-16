@@ -138,15 +138,15 @@ class MainFragment : Fragment() {
         Glide
             .with(this)
             .load(R.drawable.sale3)
-            .override(900,300)
-            .transform(CenterCrop(), RoundedCorners(15))
+            .override(700,300)
+            .transform(CenterCrop(), RoundedCorners(25))
             .into(binding.imSale1)
         //Second imageView
         Glide
             .with(this)
             .load(R.drawable.sale4)
-            .override(900,300)
-            .transform(CenterCrop(), RoundedCorners(15))
+            .override(700,300)
+            .transform(CenterCrop(), RoundedCorners(25))
             .into(binding.imSale2)
     }
 

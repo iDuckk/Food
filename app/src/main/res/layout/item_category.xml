@@ -12,6 +12,7 @@
         android:layout_height="30sp"
         android:text="Button"
         android:gravity="center"
+        android:background="?colorOnPrimary"
         android:elevation="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
