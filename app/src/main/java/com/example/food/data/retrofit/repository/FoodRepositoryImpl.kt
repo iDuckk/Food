@@ -48,7 +48,7 @@ class FoodRepositoryImpl @Inject constructor(private val foodDao: FoodDao, priva
             }
 
             override fun onFailure(call: Call<List<FoodItem>?>, t: Throwable) {
-                Log.d("TAG", t.message!!)
+                Log.d("ERROR", t.message!!)
             }
         })
         return category
