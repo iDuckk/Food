@@ -1,6 +1,7 @@
 package com.example.food.presentation.mainFragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -54,7 +55,13 @@ class MainFragment : Fragment() {
 
         initRecViewCategories()
 
-        viewModel.getCategory("burgers")
+//        viewModel.getCategory("burgers")
+
+        viewModel.getLiveDate().observe(viewLifecycleOwner){
+            it.forEach { item ->
+                //Log.d("TAG", item.name)
+            }
+        }
 
     }
 
