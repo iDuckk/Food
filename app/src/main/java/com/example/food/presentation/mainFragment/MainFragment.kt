@@ -2,6 +2,7 @@ package com.example.food.presentation.mainFragment
 
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +16,17 @@ import com.example.food.FoodApplication
 import com.example.food.R
 import com.example.food.databinding.FragmentMainBinding
 import com.example.food.presentation.adapters.categoryAdapter.CategoriesAdapter
-import com.example.food.presentation.adapters.categoryAdapter.onClickListenerItem
 import com.example.food.domain.model.CategoriesItem
+import com.example.food.domain.model.FoodItem
+import com.example.food.presentation.adapters.categoryAdapter.onClickListenerItem
 import com.example.food.presentation.adapters.categoryAdapter.selectedItem
 import com.example.food.presentation.adapters.foodAdapter.FoodAdapter
 import com.example.food.utils.isOnline
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Response
 import javax.inject.Inject
 
 class MainFragment : Fragment() {
@@ -61,15 +68,15 @@ class MainFragment : Fragment() {
 
         listCategory = createList()
 
+        setListItems()
+
+        initRecViewFood()
+
         initSpinner()
 
         initSalesImages()
 
         initRecViewCategories()
-
-        initRecViewFood()
-
-        setList()
 
     }
 
@@ -80,15 +87,27 @@ class MainFragment : Fragment() {
 
     }
 
-    private fun setList(){
+    private fun setListItems(){
         //If online set first category
         if(isOnline()) {
-            viewModel.getCategory(firstCategory)
-            setSharePref(DEFAULT_CATEGORY_TYPE)
+            CoroutineScope(IO).launch {
+                viewModel.getItems(firstCategory).enqueue(object : retrofit2.Callback<List<FoodItem>?> {
+                    override fun onResponse(call: Call<List<FoodItem>?>, response: Response<List<FoodItem>?>) {
+                        //Get data from HTTP
+                        val responseBody = response.body()!!
+                        foodAdapter.submitList(responseBody.toMutableList())
+                    }
+
+                    override fun onFailure(call: Call<List<FoodItem>?>, t: Throwable) {
+                        Log.d("ERROR", t.message!!)
+                    }
+                })
+                setSharePref(DEFAULT_CATEGORY_TYPE)
+            }
         }
-        viewModel.getLiveDate().observe(viewLifecycleOwner){
-            foodAdapter.submitList(it.toMutableList())
-        }
+//        viewModel.getLiveDate().observe(viewLifecycleOwner){
+//            foodAdapter.submitList(it.toMutableList())
+//        }
     }
 
     private fun initRecViewFood() {
@@ -112,7 +131,19 @@ class MainFragment : Fragment() {
         binding.recViewCategories.layoutManager?.scrollToPosition(selectedItem!!)
         //ClickListener
         onClickListenerItem = {
-            viewModel.getCategory(it.category)
+            CoroutineScope(IO).launch {
+                viewModel.getItems(it.category).enqueue(object : retrofit2.Callback<List<FoodItem>?> {
+                    override fun onResponse(call: Call<List<FoodItem>?>, response: Response<List<FoodItem>?>) {
+                        //Get data from HTTP
+                        val responseBody = response.body()!!
+                        foodAdapter.submitList(responseBody.toMutableList())
+                    }
+
+                    override fun onFailure(call: Call<List<FoodItem>?>, t: Throwable) {
+                        Log.d("ERROR", t.message!!)
+                    }
+                })
+            }
             //Save category View
             if(selectedItem != null)
                 setSharePref(it.id)

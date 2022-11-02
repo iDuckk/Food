@@ -8,6 +8,7 @@ import com.example.food.domain.useCases.GetLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import retrofit2.Call
 import javax.inject.Inject
 
 class MainFragmentViewModel @Inject constructor(
@@ -15,10 +16,9 @@ class MainFragmentViewModel @Inject constructor(
     private val getList: GetLiveData
 ): ViewModel() {
 
-    fun getCategory(category: String){
-        CoroutineScope(IO).launch {
-            getCategory.invoke(category)
-        }
+    suspend fun getItems(category: String): Call<List<FoodItem>> {
+
+            return getCategory.invoke(category)
     }
 
     fun getLiveDate() = getList.invoke()
