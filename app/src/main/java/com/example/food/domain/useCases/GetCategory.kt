@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class GetCategory @Inject constructor(private val repo : FoodRepository) {
 
-    suspend operator fun invoke(name : String) = repo.getItem(name)
+    suspend operator fun invoke(name : String) = repo.getItems(name)
 
 }
